@@ -3,6 +3,7 @@ const router = express.Router();
 const { check } = require('express-validator');
 const { createComment, getEventComments } = require('../controllers/commentController');
 const { authenticateUser } = require('../middleware/authMiddleware');
+const cacheMiddleware = require('../middleware/cacheMiddleware');
 
 // Create a new comment for an event
 router.post(
@@ -17,6 +18,6 @@ router.post(
 
 
 // Get all comments for a specific event
-router.get('/event/:eventId', getEventComments);
+router.get('/event/:eventId', cacheMiddleware, getEventComments);
 
 module.exports = router;

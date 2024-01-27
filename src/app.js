@@ -7,7 +7,8 @@ const ticketRoutes = require('./routes/ticketRoutes');
 const commentRoutes = require('./routes/commentRoutes');
 const { authenticateUser } = require('./middleware/authMiddleware');
 const { PORT, MONGODB_URI } = require('./config/config');
-const cacheMiddleware = require('./middleware/cacheMiddleware');
+const cors = require('cors');
+
 
 const app = express();
 
@@ -19,7 +20,7 @@ const db = mongoose.connection;
 // Handeling MongoDB connection errors
 db.on('error', (error) => {
     console.error('MongoDB Connection Error:', error);
-    process.exit(1); // Exit the application on connection error
+    process.exit(1);
 });
 
 // Once connected to MongoDB popping a Success message
@@ -28,9 +29,28 @@ db.once('open', () => {
 });
 
 // Middleware
-app.use(bodyParser.json());
+app.use(bodyParser.json({ limit: '50mb' }));
+app.use(bodyParser.urlencoded({ extended: true, limit: '50mb' }));
 
-// app.use(cacheMiddleware);
+
+//mention origins to give access
+const allowedOrigins = [
+    '*'
+];
+
+app.use(
+    cors({
+        origin: function (origin, callback) {
+            if (allowedOrigins.includes(origin) || !origin) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true,
+    })
+);
+
 
 // Routes
 app.use('/users', userRoutes);

@@ -11,7 +11,7 @@ const hashPassword = async (password) => {
 // Function to create a new token
 const generateToken = (user) => {
     const payload = { user: { id: user.id } };
-    return jwt.sign(payload, JWT_SECRET, { expiresIn: '1h' });
+    return jwt.sign(payload, JWT_SECRET, { expiresIn: '1d' });
 };
 
 module.exports = { hashPassword, generateToken };
