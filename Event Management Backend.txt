@@ -1,0 +1,114 @@
+Event Management Backend
+
+step 1: npm i
+step 2: rename .env.example to .env and and define all the fields .
+step 3: npm start(runs with a nodemon)
+
+
+
+API Endpoints
+
+User Authentication
+Register User:
+Endpoint: POST /users
+Body: JSON with username and password
+Returns: JWT token upon successful registration
+
+Login User:
+Endpoint: POST /users/login
+Body: JSON with username and password
+Returns: JWT token upon successful login
+Events
+
+
+
+Create Event:
+Endpoint: POST /events
+Requires authentication
+Body: JSON with event details (title, description, date, time, location, organizer)
+Returns: Created event details
+
+Get All Events:
+Endpoint: GET /events
+Requires authentication
+Returns: Array of events
+
+Get Event by ID:
+Endpoint: GET /events/:id
+Requires authentication
+Returns: Details of the specified event
+
+Update Event:
+Endpoint: PUT /events/:id
+Requires authentication
+Body: JSON with updated event details
+Returns: Updated event details
+
+Delete Event:
+Endpoint: DELETE /events/:id
+Requires authentication
+Returns: Success message upon deletion
+
+
+
+Tickets
+
+Purchase Ticket:
+Endpoint: POST /tickets
+Requires authentication
+Body: JSON with eventId, type, price, and quantity
+Returns: Created ticket details
+
+Get User Tickets:
+Endpoint: GET /tickets/user
+Requires authentication
+Returns: Array of tickets associated with the authenticated user
+Comments
+
+Create Comment:
+Endpoint: POST /comments
+Requires authentication
+Body: JSON with eventId and text
+Returns: Created comment details
+
+Get Event Comments:
+Endpoint: GET /comments/event/:eventId
+Requires authentication
+Returns: Array of comments associated with the specified event
+
+
+
+
+Schemas
+//userSechema
+const userSchema = new mongoose.Schema({
+    username: String,
+    password: String,
+});
+
+//eventSchema
+const eventSchema = new mongoose.Schema({
+    title: String,
+    description: String,
+    date: Date,
+    time: String,
+    location: String,
+    organizer: String,
+});
+
+//ticketSchema
+const ticketSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    event: { type: mongoose.Schema.Types.ObjectId, ref: 'Event' },
+    type: String,
+    price: Number,
+    quantity: Number,
+});
+
+//commentSchema
+const commentSchema = new mongoose.Schema({
+    user: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+    event: { type: mongoose.Schema.Types.ObjectId, ref: 'Event' },
+    text: String,
+});
+
